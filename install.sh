@@ -29,7 +29,7 @@ cd ../
 echo "-------------------------Installing Nginx-------------------------"
 ModSecuritynginxDIR="ModSecurity-nginx"
 # 检查目录是否存在
-if [ -d "$nginxDIR" ]; then
+if [ -d "$ModSecuritynginxDIR" ]; then
   echo "[*]ModSecurity-nginx has been cloned."
 else
   git clone https://github.com/owasp-modsecurity/ModSecurity
