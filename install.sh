@@ -6,7 +6,7 @@ apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-ope
 echo "-------------------------Dependencies installed-------------------------"
 
 echo "-------------------------Installing ModSecurity-------------------------"
-git clone https://github.com/owasp-modsecurity/ModSecurity
+#git clone https://github.com/owasp-modsecurity/ModSecurity
 cd ModSecurity/
 git submodule init
 git submodule update
@@ -31,7 +31,7 @@ echo "-------------------------Nginx installed-------------------------"
 cd ../
 
 echo "-------------------------Configuring ModSecurity-------------------------"
-cp ModSecurity/modsecurity.conf-recommended /usr/local/nginx/conf/modsecurity/modsecurity.conf
+cp modsecurity.conf /usr/local/nginx/conf/modsecurity/
 cp ModSecurity/unicode.mapping /usr/local/nginx/conf/modsecurity/
 echo "-------------------------ModSecurity configured-------------------------"
 
@@ -49,7 +49,6 @@ cd ../
 
 echo "-------------------------Configuring Nginx-------------------------"
 cp nginx.conf /usr/local/nginx/conf/
-cp modsec_includes.conf /usr/local/nginx/conf/
 echo "-------------------------Nginx configured-------------------------"
 
 
