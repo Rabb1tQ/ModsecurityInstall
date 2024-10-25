@@ -6,10 +6,10 @@ apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-ope
 echo "-------------------------Dependencies installed-------------------------"
 
 echo "-------------------------Installing ModSecurity-------------------------"
-DIR="ModSecurity"
+ModSecurityDIR="ModSecurity"
 
 # 检查目录是否存在
-if [ -d "$DIR" ]; then
+if [ -d "$ModSecurityDIR" ]; then
   echo "[*]ModSecurity has been cloned."
 else
   git clone https://github.com/owasp-modsecurity/ModSecurity
@@ -27,9 +27,23 @@ echo "-------------------------ModSecurity installed-------------------------"
 cd ../
 
 echo "-------------------------Installing Nginx-------------------------"
-git clone https://github.com/SpiderLabs/ModSecurity-nginx
-wget https://nginx.org/download/nginx-1.27.2.tar.gz
-tar -xvzf nginx-1.27.2.tar.gz nginx-1.27.2/
+ModSecurity-nginxDIR="ModSecurity-nginx"
+# 检查目录是否存在
+if [ -d "$nginxDIR" ]; then
+  echo "[*]ModSecurity-nginx has been cloned."
+else
+  git clone https://github.com/owasp-modsecurity/ModSecurity
+fi
+
+nginxDIR="nginx-1.27.2"
+# 检查目录是否存在
+if [ -d "$nginxDIR" ]; then
+  echo "[*]nginx has been download."
+else
+  wget https://nginx.org/download/nginx-1.27.2.tar.gz
+  tar -xvzf nginx-1.27.2.tar.gz nginx-1.27.2/
+fi
+
 cd nginx-1.27.2/
 ./configure --add-module=../ModSecurity-nginx
 make
@@ -44,8 +58,16 @@ cp ModSecurity/unicode.mapping /usr/local/nginx/conf/modsecurity/
 echo "-------------------------ModSecurity configured-------------------------"
 
 echo "-------------------------Installing ModSecurity rules-------------------------"
-wget https://github.com/coreruleset/coreruleset/releases/download/v4.7.0/coreruleset-4.7.0-minimal.tar.gz
-tar -xvzf coreruleset-4.7.0-minimal.tar.gz
+
+corerulesetDIR="coreruleset-4.7.0"
+# 检查目录是否存在
+if [ -d "$corerulesetDIR" ]; then
+  echo "[*]corerule has been download."
+else
+  wget https://github.com/coreruleset/coreruleset/releases/download/v4.7.0/coreruleset-4.7.0-minimal.tar.gz
+  tar -xvzf coreruleset-4.7.0-minimal.tar.gz
+fi
+
 cd coreruleset*
 cp rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
 cp rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
