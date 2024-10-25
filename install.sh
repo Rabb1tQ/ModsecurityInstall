@@ -1,11 +1,11 @@
 #/bin/sh
 
-echo "-------------------------Installing dependencies"-------------------------"
+echo "-------------------------Installing dependencies-------------------------"
 apt-get update
 apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-openssl-dev libgeoip-dev liblmdb-dev libpcre2-dev libtool libxml2-dev libyajl-dev pkgconf zlib1g-dev
 echo "-------------------------Dependencies installed-------------------------"
 
-echo ""-------------------------Installing ModSecurity"-------------------------"
+echo "-------------------------Installing ModSecurity-------------------------"
 git clone https://github.com/owasp-modsecurity/ModSecurity
 cd ModSecurity/
 git submodule init
@@ -18,7 +18,7 @@ echo "-------------------------ModSecurity installed-------------------------"
 
 cd ../
 
-echo ""-------------------------Installing Nginx"-------------------------"
+echo "-------------------------Installing Nginx-------------------------"
 git clone https://github.com/SpiderLabs/ModSecurity-nginx
 wget https://nginx.org/download/nginx-1.27.2.tar.gz
 tar -xvzf nginx-1.27.2.tar.gz nginx-1.27.2/
@@ -30,12 +30,12 @@ echo "-------------------------Nginx installed-------------------------"
 
 cd ../
 
-echo ""-------------------------Configuring ModSecurity"-------------------------"
+echo "-------------------------Configuring ModSecurity-------------------------"
 cp ModSecurity/modsecurity.conf-recommended /usr/local/nginx/conf/modsecurity/modsecurity.conf
 cp ModSecurity/unicode.mapping /usr/local/nginx/conf/modsecurity/
 echo "-------------------------ModSecurity configured-------------------------"
 
-echo ""-------------------------Installing ModSecurity rules"-------------------------"
+echo "-------------------------Installing ModSecurity rules-------------------------"
 wget https://github.com/coreruleset/coreruleset/releases/download/v4.7.0/coreruleset-4.7.0-minimal.tar.gz
 tar -xvzf coreruleset-4.7.0-minimal.tar.gz
 cd coreruleset*
@@ -47,19 +47,19 @@ echo "-------------------------ModSecurity rules installed----------------------
 
 cd ../
 
-echo ""-------------------------Configuring Nginx"-------------------------"
+echo "-------------------------Configuring Nginx-------------------------"
 cp nginx.conf /usr/local/nginx/conf/
 cp modsec_includes.conf /usr/local/nginx/conf/
-echo ""-------------------------Nginx configured"-------------------------"
+echo "-------------------------Nginx configured-------------------------"
 
 
 
-echo ""-------------------------Creating directories"-------------------------"
+echo "-------------------------Creating directories-------------------------"
 mkdir /var/www/html
-echo ""-------------------------Directories created"-------------------------"
+echo "-------------------------Directories created-------------------------"
 
-echo ""-------------------------Starting Nginx"-------------------------"
+echo "-------------------------Starting Nginx-------------------------"
 /usr/local/nginx/sbin/nginx
-echo ""-------------------------Nginx started"-------------------------"
+echo "-------------------------Nginx started-------------------------"
 
-echo ""-------------------------Installation complete"-------------------------"
+echo "-------------------------Installation complete-------------------------"
