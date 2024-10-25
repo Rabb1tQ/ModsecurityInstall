@@ -6,7 +6,15 @@ apt-get install git g++ apt-utils autoconf automake build-essential libcurl4-ope
 echo "-------------------------Dependencies installed-------------------------"
 
 echo "-------------------------Installing ModSecurity-------------------------"
-git clone https://github.com/owasp-modsecurity/ModSecurity
+DIR="ModSecurity"
+
+# 检查目录是否存在
+if [ -d "$DIR" ]; then
+  echo "[*]ModSecurity has been cloned."
+else
+  git clone https://github.com/owasp-modsecurity/ModSecurity
+fi
+
 cd ModSecurity/
 git submodule init
 git submodule update
