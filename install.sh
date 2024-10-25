@@ -85,7 +85,7 @@ echo "-------------------------Nginx configured-------------------------"
 
 
 echo "-------------------------Creating directories-------------------------"
-mkdir /var/www/html
+mkdir -p /var/www/html
 echo "-------------------------Directories created-------------------------"
 
 echo "-------------------------Starting Nginx-------------------------"
