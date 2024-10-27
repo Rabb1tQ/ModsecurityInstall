@@ -32,7 +32,7 @@ ModSecuritynginxDIR="ModSecurity-nginx"
 if [ -d "$ModSecuritynginxDIR" ]; then
   echo "[*]ModSecurity-nginx has been cloned."
 else
-  git clone https://github.com/owasp-modsecurity/ModSecurity
+  git clone https://github.com/owasp-modsecurity/ModSecurity-nginx
 fi
 
 nginxDIR="nginx-1.27.2"
@@ -69,7 +69,7 @@ else
   tar -xvzf coreruleset-4.7.0-minimal.tar.gz
 fi
 
-cd coreruleset*
+cd coreruleset-4.7.0
 cp rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
 cp rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
 cp crs-setup.conf.example /usr/local/nginx/conf/modsecurity/crs-setup.conf
