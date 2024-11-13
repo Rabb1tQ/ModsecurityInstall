@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS security_logs
+
+CREATE TABLE security_logs.modsecurity_logs (
+    client_ip String,
+    timestamp DateTime,
+    server_id String,
+    client_port UInt16,
+    host_ip String,
+    host_port UInt16,
+    unique_id String,
+    method String,
+    http_version Float32,
+    uri String,
+    headers String,
+    response_body String,
+    http_code UInt16,
+    response_headers String,
+    modsecurity_version String,
+    connector_version String,
+    secrules_engine String,
+    messages String
+) ENGINE = MergeTree()
+ORDER BY timestamp
+
