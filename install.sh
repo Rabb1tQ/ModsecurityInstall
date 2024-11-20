@@ -104,12 +104,21 @@ echo "-------------------------Nginx started-------------------------"
 # 安装 ClickHouse
 echo "-------------------------Installing ClickHouse-------------------------"
 apt-get update
-apt-get install -y clickhouse-server clickhouse-client
+apt-get install -y apt-transport-https ca-certificates curl gnupg
+curl -fsSL 'https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key' | gpg --dearmor -o /usr/share/keyrings/clickhouse-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main" | tee \
+    /etc/apt/sources.list.d/clickhouse.list
+apt-get update
+sudo apt-get install -y clickhouse-server clickhouse-client
+
+rm -rf /etc/clickhouse-server/users.d
 
 # 定义配置文件路径
 CONFIG_XML="/etc/clickhouse-server/config.xml"
 USERS_XML="/etc/clickhouse-server/users.xml"
 DEFAULT_XML="/etc/clickhouse-server/default.xml"
+
 
 # 设置 ClickHouse 默认用户密码
 PASSWORD="your_password_here"
