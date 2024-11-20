@@ -257,7 +257,7 @@ ORDER BY timestamp;"
 
 # 执行第三个 SQL 语句：创建 nginx_log 表
 echo "-------------------------Creating nginx_log Table-------------------------"
-clickhouse-client --password="${PASSWORD}" --query="CREATE TABLE IF NOT EXISTS nginx_log (
+clickhouse-client --password="${PASSWORD}" --query="CREATE TABLE IF NOT EXISTS security_logs.nginx_log (
     ip String,
     time DateTime,
     url String,
