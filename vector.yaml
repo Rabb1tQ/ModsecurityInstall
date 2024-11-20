@@ -1,0 +1,82 @@
+# Source: 从文件读取 ModSecurity 日志
+sources:
+  modsecurity:
+    type: file
+    include: ["/var/log/modsec_audit.log"]  # 更新日志文件路径
+    read_from: beginning
+    ignore_older: 86400  # 忽略一天前的旧日志
+  # Source: 从文件读取 Nginx 日志
+  nginx:
+    type: file
+    include: ["/opt/openresty/nginx/logs/access.log"]
+    read_from: beginning
+    ignore_older: 86400
+
+transforms:
+  parse_json:
+    type: remap
+    inputs: ["modsecurity"]
+    source: |
+      # 确保每行是一个完整的JSON对象
+      . = parse_json!(.message)
+      # 如果解析失败，尝试将整个日志行作为JSON解析
+      if . == null {
+        . = parse_json!(.)
+      }
+      # 提取和转换字段
+      .client_ip = .transaction.client_ip
+      .time_stamp = parse_timestamp!(.transaction.time_stamp, "%a %b %d %H:%M:%S %Y")
+      .server_id = .transaction.server_id
+      .client_port = .transaction.client_port
+      .host_ip = .transaction.host_ip
+      .host_port = .transaction.host_port
+      .unique_id = .transaction.unique_id
+      .method = .transaction.request.method
+      .http_version = .transaction.request.http_version
+      .uri = .transaction.request.uri
+      .headers = .transaction.request.headers
+      .response_body = .transaction.response.body
+      .http_code = .transaction.response.http_code
+      .response_headers = .transaction.response.headers
+      .modsecurity_version = .transaction.producer.modsecurity
+      .connector_version = .transaction.producer.connector
+      .secrules_engine = .transaction.producer.secrules_engine
+      .messages = .transaction.messages
+  parse_nginx:
+    type: remap
+    inputs: ["nginx"]
+    source: |
+      . |= parse_regex!(.message, r'^(?P<ip>\d+\.\d+\.\d+\.\d+) \- (?P<date>\d+\-\d+\-\d+)T(?P<time>\d+:\d+:\d+).+?"(?P<url>.+?)" (?P<status>\d+) (?P<size>\d+) "(?P<agent>.+?)"$')
+      .status = to_int!(.status)
+      .size = to_int!(.size)
+      .time = .date + " " + .time
+
+  # Transform: 去重处理，防止重复发送
+  deduplicate:
+    type: dedupe
+    inputs: ["parse_json"]
+    fields:
+      match: ["unique_id"]  # 使用 unique_id 字段进行去重
+
+# Sink: 将数据发送到 ClickHouse
+sinks:
+  clickhouse:
+    type: http
+    inputs: ["deduplicate"]
+    uri: "http://default:kali@127.0.0.1:8123/?query=INSERT%20INTO%20security_logs.modsecurity_logs%20FORMAT%20JSONEachRow"
+    encoding:
+      codec: json  # 使用 JSON 格式编码数据
+    method: post
+    healthcheck:
+      enabled: true
+# Sink: 将 Nginx 日志数据发送到 ClickHouse
+  clickhouse_nginx:
+    type: http
+    inputs: ["parse_nginx"]
+    uri: "http://default:kali@127.0.0.1:8123/?query=INSERT%20INTO%20security_logs.log%20FORMAT%20JSONEachRow"
+    encoding:
+      codec: json
+    method: post
+    healthcheck:
+      enabled: true
+
