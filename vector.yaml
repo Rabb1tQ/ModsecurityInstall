@@ -73,7 +73,7 @@ sinks:
   clickhouse_nginx:
     type: http
     inputs: ["parse_nginx"]
-    uri: "http://default:kali@127.0.0.1:8123/?query=INSERT%20INTO%20security_logs.log%20FORMAT%20JSONEachRow"
+    uri: "http://default:kali@127.0.0.1:8123/?query=INSERT%20INTO%20security_logs.nginx_log%20FORMAT%20JSONEachRow"
     encoding:
       codec: json
     method: post
