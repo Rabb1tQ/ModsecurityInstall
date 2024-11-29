@@ -89,6 +89,7 @@ cd ../
 
 echo "-------------------------Configuring Nginx-------------------------"
 cp nginx.conf /opt/openresty/nginx/conf/
+cp blocked.html /opt/openresty/nginx/html/
 echo "-------------------------Nginx configured-------------------------"
 
 
